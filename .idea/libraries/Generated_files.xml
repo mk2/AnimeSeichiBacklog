@@ -1,0 +1,26 @@
+<component name="libraryTable">
+  <library name="Generated files" type="javaScript">
+    <properties>
+      <sourceFilesUrls>
+        <item url="file://$PROJECT_DIR$/src/main/webapp/resources/scripts/app/controller/FeatureFormViewController.js" />
+        <item url="file://$PROJECT_DIR$/src/main/webapp/resources/scripts/app/Events.js" />
+        <item url="file://$PROJECT_DIR$/src/main/webapp/resources/scripts/app/Module.js" />
+        <item url="file://$PROJECT_DIR$/src/main/webapp/resources/scripts/app/controller/DrawViewController.js" />
+        <item url="file://$PROJECT_DIR$/src/main/webapp/resources/scripts/app/AppDelegate.js" />
+        <item url="file://$PROJECT_DIR$/src/main/webapp/resources/scripts/app/EventObserver.js" />
+        <item url="file://$PROJECT_DIR$/src/main/webapp/resources/scripts/app/controller/MapViewController.js" />
+      </sourceFilesUrls>
+    </properties>
+    <CLASSES>
+      <root url="file://$PROJECT_DIR$/src/main/webapp/resources/scripts/app/controller/FeatureFormViewController.js" />
+      <root url="file://$PROJECT_DIR$/src/main/webapp/resources/scripts/app/Events.js" />
+      <root url="file://$PROJECT_DIR$/src/main/webapp/resources/scripts/app/Module.js" />
+      <root url="file://$PROJECT_DIR$/src/main/webapp/resources/scripts/app/controller/DrawViewController.js" />
+      <root url="file://$PROJECT_DIR$/src/main/webapp/resources/scripts/app/AppDelegate.js" />
+      <root url="file://$PROJECT_DIR$/src/main/webapp/resources/scripts/app/EventObserver.js" />
+      <root url="file://$PROJECT_DIR$/src/main/webapp/resources/scripts/app/controller/MapViewController.js" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

@@ -1,0 +1,82 @@
+<beans:beans xmlns="http://www.springframework.org/schema/security"
+             xmlns:beans="http://www.springframework.org/schema/beans"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+           http://www.springframework.org/schema/security
+           http://www.springframework.org/schema/security/spring-security.xsd">
+
+    <global-method-security pre-post-annotations="enabled"/>
+
+    <http use-expressions="true" access-denied-page="/WEB-INF/error/403.jsp">
+        <!-- root -->
+        <intercept-url pattern="/" access="permitAll"/>
+
+        <!-- map page -->
+        <intercept-url pattern="/map/**" access="permitAll"/>
+
+        <!-- each api for GET access -->
+        <intercept-url pattern="/f/**" method="GET" access="permitAll"/>
+        <intercept-url pattern="/r/**" method="GET" access="permitAll"/>
+        <intercept-url pattern="/u/**" method="GET" access="permitAll"/>
+
+        <!-- each api for POST access -->
+        <intercept-url pattern="/f/**" method="POST" access="hasRole('ROLE_USER')"/>
+        <intercept-url pattern="/r/**" method="POST" access="permitAll"/>
+        <intercept-url pattern="/u/**" method="POST" access="permitAll"/>
+
+        <!-- account management pages -->
+        <intercept-url pattern="/login" access="permitAll"/>
+        <intercept-url pattern="/register" access="permitAll"/>
+        <intercept-url pattern="/update" access="isFullyAuthenticated()"/>
+        <intercept-url pattern="/withdraw" access="isFullyAuthenticated()"/>
+
+        <form-login
+                login-page="/login"
+                default-target-url="/map"
+                always-use-default-target="true"
+                authentication-failure-url="/"/>
+
+        <logout
+                delete-cookies="JSESSIONID"/>
+
+        <session-management
+                invalid-session-url="/">
+            <concurrency-control max-sessions="1" error-if-maximum-exceeded="true"/>
+        </session-management>
+
+        <remember-me data-source-ref="dataSource" user-service-ref="userDetailService"/>
+
+        <!--
+        Enable cross site request forgery vulnerability provision.
+        This affects wide range parts of spring functions.
+        For instance, uploading file (multipartfile) function.
+        -->
+        <csrf/>
+
+        <!-- Vulnerability provision -->
+        <headers>
+            <xss-protection enabled="true" block="true"/>
+            <frame-options policy="DENY"/>
+            <content-type-options/>
+        </headers>
+
+    </http>
+
+    <beans:bean id="bcryptEncoder"
+                class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder"/>
+
+    <!-- ユーザー名には、メールアドレスを用いる -->
+    <jdbc-user-service
+            id="userDetailService"
+            data-source-ref="dataSource"
+            users-by-username-query="SELECT user_name, user_password, user_enabled FROM asb_user WHERE user_name = ?"
+            authorities-by-username-query="SELECT asb_user.user_name, asb_role.user_role FROM asb_user LEFT JOIN asb_role ON asb_user.user_id = asb_role.user_id WHERE asb_user.user_name = ?"/>
+
+    <authentication-manager alias="authenticationManager">
+        <authentication-provider user-service-ref="userDetailService">
+            <password-encoder ref="bcryptEncoder"/>
+        </authentication-provider>
+    </authentication-manager>
+
+</beans:beans>

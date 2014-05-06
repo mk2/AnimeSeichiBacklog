@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd">
+
+    <context:component-scan base-package="com.me.h.lycaon.animeseichibacklog.controller"/>
+
+    <bean id="featureCrudService" class="org.mockito.Mockito" factory-method="mock">
+        <constructor-arg value="com.me.h.lycaon.animeseichibacklog.service.crud.FeatureCrudService"/>
+    </bean>
+
+    <bean id="userCrudService" class="org.mockito.Mockito" factory-method="mock">
+        <constructor-arg value="com.me.h.lycaon.animeseichibacklog.service.crud.UserCrudService"/>
+    </bean>
+
+    <bean id="userInfoService" class="org.mockito.Mockito" factory-method="mock">
+        <constructor-arg value="com.me.h.lycaon.animeseichibacklog.service.user.UserInfoService"/>
+    </bean>
+
+    <bean id="remarkCrudService" class="org.mockito.Mockito" factory-method="mock">
+        <constructor-arg value="com.me.h.lycaon.animeseichibacklog.service.crud.RemarkCrudService"/>
+    </bean>
+
+    <bean id="imageService" class="org.mockito.Mockito" factory-method="mock">
+        <constructor-arg value="com.me.h.lycaon.animeseichibacklog.service.image.ImageService"/>
+    </bean>
+
+    <context:property-placeholder location="classpath:spring/server-config.properties"/>
+
+    <!-- @Loggableアノテーションの有効化 -->
+    <bean class="com.me.h.lycaon.animeseichibacklog.loggable.LoggablePostProcessor"/>
+
+    <!-- @MVCのアノテーションを有効化、またJSONメッセージコンバータを有効化-->
+    <mvc:annotation-driven>
+        <mvc:message-converters>
+            <bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter"/>
+        </mvc:message-converters>
+        <mvc:argument-resolvers>
+            <bean class="org.springframework.security.web.bind.support.AuthenticationPrincipalArgumentResolver"/>
+        </mvc:argument-resolvers>
+    </mvc:annotation-driven>
+
+    <bean id="filterMultipartResolver"
+          class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+        <!-- one of the properties available; the maximum file size in bytes -->
+        <property name="maxUploadSize" value="1000000"/>
+    </bean>
+
+    <bean id="conversionService"
+          class="org.springframework.context.support.ConversionServiceFactoryBean">
+        <property name="converters">
+            <set>
+                <bean class="com.me.h.lycaon.animeseichibacklog.service.converter.impl.FeatureToGeoJsonFeature"/>
+                <bean class="com.me.h.lycaon.animeseichibacklog.service.converter.impl.FeatureFormModelToFeature"/>
+                <bean class="com.me.h.lycaon.animeseichibacklog.service.converter.impl.RemarkFormModelToRemark"/>
+                <bean class="com.me.h.lycaon.animeseichibacklog.service.converter.impl.UserFormModelToUser"/>
+            </set>
+        </property>
+    </bean>
+
+
+    <mvc:resources mapping="/resources/**" location="/resources/"/>
+
+    <!-- - The ContentNegotiatingViewResolver delegates to the InternalResourceViewResolver
+        and BeanNameViewResolver, - and uses the requested media type (determined
+        by the path extension) to pick a matching view. - When the media type is
+        'text/html', it will delegate to the InternalResourceViewResolver's JstlView,
+        - otherwise to the BeanNameViewResolver. -->
+    <!-- ContentNegotiatingViewResolverを使うことでRequestのmimeTypeに応じてViewResolverを変更することができる -->
+    <bean class="org.springframework.web.servlet.view.ContentNegotiatingViewResolver">
+
+        <property name="contentNegotiationManager" ref="contentNegotiationManager"/>
+
+        <!-- Jackson2用のJsonView -->
+        <property name="defaultViews">
+            <list>
+                <bean class="org.springframework.web.servlet.view.json.MappingJackson2JsonView"/>
+            </list>
+        </property>
+
+        <property name="viewResolvers">
+            <list>
+                <!-- 他のViewやViewResolverが適切に処理できなかった場合、InternalResourceViewResolverがすべて処理する -->
+                <bean id="indexViewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+                    <property name="viewClass"
+                              value="org.springframework.web.servlet.view.JstlView"/>
+                    <property name="prefix" value="/WEB-INF/pages/"/>
+                    <property name="suffix" value=".jsp"/>
+                    <property name="order" value="0"/>
+                </bean>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="contentNegotiationManager" class="org.springframework.web.accept.ContentNegotiationManagerFactoryBean">
+
+        <!-- 標準のコンテントタイプはtext/html -->
+        <property name="defaultContentType" value="text/html"/>
+
+        <!-- 受け付けるコンテントタイプはtext/htmlとapplication/jsonの2種類のみ -->
+        <property name="mediaTypes">
+            <map>
+                <entry key="html" value="text/html"/>
+                <entry key="json" value="application/json"/>
+                <entry key="octet" value="application/octet-stream"/>
+            </map>
+        </property>
+
+        <property name="ignoreAcceptHeader" value="false"/>
+
+    </bean>
+
+</beans>

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<div class="media">
+    <a class="pull-left" href="#{window.system.photoBaseUrl}/{{=it.featureImagePath}}">
+        <img class="media-object img-thumbnail"
+             src="#{window.system.photoBaseUrl}/{{=it.featureImagePath}}#{window.system.suffixForThumbnail}"/>
+    </a>
+
+    <div class="media-body">
+        <h4 class="media-heading">{{=it.featureName}}</h4>
+
+        <p style="min-height:120px;">{{=it.featureDescription}}</p>
+        <ul class='list-inline'>
+            <li>
+                <a href="#{window.system.photoBaseUrl}/{{=it.createUserImagePath}}">
+                    <img class="img-rounded"
+                         src="#{window.system.photoBaseUrl}/{{=it.createUserImagePath}}#{window.system.suffixForThumbnail}"
+                         style='width:15px;height:15px;'/>
+                </a>
+            </li>
+            <li>投稿者:</li>
+            <li>{{=it.userAlias}}</li>
+            <li>作成日時:</li>
+            <li>{{=it.featureCreateDate}}</li>
+            <li>更新日時:</li>
+            <li>{{=it.featureUpdateDate}}</li>
+            <li>タグ:</li>
+            <li>{{=it.featureTags}}</li>
+        </ul>
+    </div>
+</div>

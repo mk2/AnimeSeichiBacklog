@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.me.h.lycaon.animeseichibacklog.persistence.RemarkMapper">
+
+    <cache/>
+
+    <insert id="insert" keyProperty="remark_id">
+        INSERT INTO asb_remark (
+        feature_id,
+        create_user_id,
+        remark_message,
+        remark_image_path
+        )
+        VALUES (
+        #{featureId},
+        (asb_get_user_id(#{createUserId})),
+        #{remarkMessage},
+        #{remarkImagePath}
+        )
+    </insert>
+
+    <delete id="delete">
+        DELETE FROM asb_remark
+        WHERE remark_id = #{remarkId}
+    </delete>
+
+    <select id="selectById" resultType="com.me.h.lycaon.animeseichibacklog.domain.Remark">
+        SELECT *
+        FROM asb_remark_view
+        WHERE remark_id = #{remarkId}
+    </select>
+    <select id="selectByFeatureId" resultType="com.me.h.lycaon.animeseichibacklog.domain.Remark">
+        SELECT *
+        FROM asb_remark_view
+        WHERE feature_id = #{featureId}
+    </select>
+
+    <select id="selectAll" resultType="com.me.h.lycaon.animeseichibacklog.domain.Remark">
+        SELECT *
+        FROM asb_remark_view
+    </select>
+    <select id="count" resultType="java.lang.Long">
+        SELECT COUNT(*)
+        FROM asb_remark
+    </select>
+    <select id="selectLastSerialId" resultType="java.lang.Long">
+        SELECT max(remark_id) FROM asb_remark
+    </select>
+
+</mapper>

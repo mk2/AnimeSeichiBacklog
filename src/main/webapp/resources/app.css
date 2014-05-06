@@ -1,0 +1,66 @@
+html, body {
+    margin: 0 0 0 0;
+    padding: 0 0 0 0;
+    width: 100%;
+    height: 100%;
+}
+
+#map {
+    height: 100%;
+    width: 100%;
+    margin: 0 auto;
+    background-color: #999;
+}
+
+.popupDiv {
+    margin: 0 auto;
+}
+
+.featureNameDiv span {
+    font-size: 1.5em;
+    font-weight: bold;
+}
+
+.featurePhotoDiv {
+    width: 150px;
+    height: 150px;
+}
+
+.featureDescriptionDiv {
+    font-size: 0.9em;
+}
+
+.notification-control {
+    background-color: rgba(90, 155, 204, 0.56);
+    color: #FFFFFF;
+    padding: 1px 5px 1px 5px;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+}
+
+#featureFormView {
+    margin-top: 20px;
+}
+
+#featureFormView textarea {
+    resize: vertical;
+}
+
+.leaflet-sidebar.right {
+    width: 640px;
+    right: -750px;
+}
+
+.leaflet-bottom.leaflet-right {
+    right: 0px !important;
+}
+
+.leaflet-bottom.leaflet-left {
+    left: 0px !important;
+}
+
+.featureRemark img {
+    width: 150px;
+    height: 150px;
+}

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<div class="media">
+    <a class="pull-left" href="#{window.system.photoBaseUrl}/{{=it.remarkImagePath}}">
+        <img class="media-object img-thumbnail"
+             src="#{window.system.photoBaseUrl}/{{=it.remarkImagePath}}#{window.system.suffixForThumbnail}"
+             style='width:75px;height:75px;'/>
+    </a>
+
+    <div class="media-body">
+        <p style="min-height:75px;">{{=it.remarkMessage}}</p>
+        <ul class='list-inline'>
+            <li>
+                <a href="#{window.system.photoBaseUrl}/{{=it.createUserImagePath}}">
+                    <img class="img-rounded"
+                         src="#{window.system.photoBaseUrl}/{{=it.createUserImagePath}}#{window.system.suffixForThumbnail}"
+                         style='width:15px;height:15px;'/>
+                </a>
+            </li>
+            <li>投稿者:</li>
+            <li>{{=it.userAlias}}</li>
+            <li>作成日時:</li>
+            <li>{{=it.createDate}}</li>
+        </ul>
+    </div>
+</div>

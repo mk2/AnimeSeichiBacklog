@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.me.h.lycaon.animeseichibacklog.persistence.FeatureMapper">
+
+    <cache/>
+
+    <insert id="insert" keyProperty="feature_id">
+        INSERT INTO asb_feature (
+        create_user_id,
+        update_user_id,
+        is_editable,
+        is_other_user_editable,
+        feature_tags,
+        feature_name,
+        feature_description,
+        feature_style,
+        feature_image_path,
+        feature_geom
+        )
+        VALUES (
+        #{createUserId},
+        #{updateUserId},
+        #{isEditable},
+        #{isOtherUserEditable},
+        #{featureTags},
+        #{featureName},
+        #{featureDescription},
+        #{featureStyle},
+        #{featureImagePath},
+        ST_SetSRID(ST_GeomFromGeoJSON(#{geomAsGeoJson}), 4326)
+        )
+    </insert>
+
+    <update id="update">
+        UPDATE asb_feature SET
+        update_user_id = #{updateUserId},
+        is_editable = #{isEditable},
+        is_other_user_editable = #{isOtherUserEditable},
+        feature_tags = #{featureTags},
+        feature_name = #{featureName},
+        feature_description = #{featureDescription},
+        feature_style = #{featureStyle},
+        feature_geom = ST_SetSRID(ST_GeomFromGeoJSON(#{geomAsGeoJson}), 4326),
+        feature_feature_image_path = #{featureImagePath},
+        update_date = now()
+        WHERE
+        feature_id = #{featureId}
+    </update>
+
+    <delete id="delete">
+        DELETE
+        FROM asb_feature
+        WHERE feature_id = #{featureId}
+    </delete>
+
+    <select id="selectAll" resultType="com.me.h.lycaon.animeseichibacklog.domain.Feature">
+        SELECT *
+        FROM asb_feature_view
+    </select>
+
+    <select id="selectById" resultType="com.me.h.lycaon.animeseichibacklog.domain.Feature">
+        SELECT *
+        FROM asb_feature_view
+        WHERE
+        feature_id = #{featureId}
+    </select>
+
+    <select id="selectByBBox" resultType="com.me.h.lycaon.animeseichibacklog.domain.Feature">
+        SELECT *
+        FROM asb_feature_view
+        WHERE
+        feature_geom
+        &amp;&amp;
+        ST_SetSRID(
+        ST_MakeBox2D(
+        ST_Point(#{lngLowLeft}, #{latLowLeft}),
+        ST_Point(#{lngUpRight}, #{latUpRight})),
+        4326)
+    </select>
+
+    <select id="selectByBBoxWithTagsWithUserName" resultType="com.me.h.lycaon.animeseichibacklog.domain.Feature">
+        SELECT *
+        FROM asb_feature_view
+        LEFT JOIN asb_user
+        ON asb_feature_view.user_id = asb_user.user_id
+        WHERE (
+        asb_feature_view.feature_geom
+        &amp;&amp;
+        ST_SetSRID(
+        ST_MakeBox2D(
+        ST_Point(#{lngLowLeft}, #{latLowLeft}),
+        ST_Point(#{lngUpRight}, #{latUpRight})),
+        4326)
+        )
+        AND (
+        asb_feature_view.tags LIKE #{tags} OR asb_user.tags LIKE #{tags}
+        )
+        AND (
+        asb_user.user_name LIKE #{userName}
+        )
+    </select>
+
+    <select id="count" resultType="long">
+        SELECT COUNT(*)
+        FROM asb_feature
+    </select>
+
+    <select id="selectByRange" resultType="com.me.h.lycaon.animeseichibacklog.domain.Feature">
+        SELECT *
+        FROM asb_feature_view
+        LIMIT #{limit}
+        OFFSET #{offset}
+    </select>
+    <select id="selectLastSerialId" resultType="java.lang.Long">
+        SELECT max(feature_id) FROM asb_feature
+    </select>
+
+</mapper>
