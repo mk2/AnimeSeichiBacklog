@@ -1,3 +1,8 @@
+-- require postgis and pgcrypto
+-- install with
+--              create extension postgis;
+--              create extension pgcrypto;
+
 -- generate user name stored procedure
 CREATE OR REPLACE FUNCTION asb_make_user_name(TEXT, TEXT)
   RETURNS TEXT AS

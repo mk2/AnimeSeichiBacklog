@@ -108,16 +108,16 @@
         <url-pattern>/</url-pattern>
     </servlet-mapping>
 
-    <filter>
-        <filter-name>httpMethodFilter</filter-name>
-        <filter-class>org.springframework.web.filter.HiddenHttpMethodFilter</filter-class>
-        <async-supported>true</async-supported>
-    </filter>
+    <!--<filter>-->
+    <!--<filter-name>httpMethodFilter</filter-name>-->
+    <!--<filter-class>org.springframework.web.filter.HiddenHttpMethodFilter</filter-class>-->
+    <!--<async-supported>true</async-supported>-->
+    <!--</filter>-->
 
-    <filter-mapping>
-        <filter-name>httpMethodFilter</filter-name>
-        <servlet-name>mvc-dispatcher</servlet-name>
-    </filter-mapping>
+    <!--<filter-mapping>-->
+    <!--<filter-name>httpMethodFilter</filter-name>-->
+    <!--<servlet-name>mvc-dispatcher</servlet-name>-->
+    <!--</filter-mapping>-->
 
     <error-page>
         <error-code>404</error-code>
