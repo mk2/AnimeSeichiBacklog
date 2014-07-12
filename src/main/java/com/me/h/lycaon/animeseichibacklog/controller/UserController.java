@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
@@ -67,6 +68,22 @@ public class UserController {
         } else {
             return "redirect:/";
         }
+    }
+
+    /**
+     * Logout process
+     *
+     * @return Logout success -> redirect to "/"
+     */
+    @PreAuthorize("hasAuthority('ROLE_USER')")
+    @RequestMapping(value = "/o", method = RequestMethod.GET)
+    public String logout(
+            ModelMap model
+    ) {
+        SecurityContextHolder.clearContext();
+        model.addAttribute("userRoles", "");
+        model.addAttribute("userAlias", "");
+        return "redirect:/";
     }
 
 

@@ -14,7 +14,7 @@
     <title>${i18n.map.title}</title>
 
     <!-- Leafletjs -->
-    <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.2/leaflet.css"/>
+    <link rel="stylesheet" href="//cdn.leafletjs.com/leaflet-0.7.3/leaflet.css"/>
 
     <!-- Leafletjs plugins -->
     <link rel="stylesheet" href="${baseUrls.rsrcBaseUrl}/scripts/lib/L.Control.MousePosition.css"/>
@@ -24,14 +24,13 @@
     <link rel="stylesheet" href="${baseUrls.rsrcBaseUrl}/scripts/lib/L.Control.Sidebar.css"/>
 
     <!-- Bootstrap -->
-    <link rel="stylesheet"
-          href="${baseUrls.rsrcBaseUrl}/scripts/lib/bootstrap-3.1.1-dist/css/bootstrap.min.css"/>
-    <link rel="stylesheet"
-          href="${baseUrls.rsrcBaseUrl}/scripts/lib/bootstrap-3.1.1-dist/css/bootstrap-theme.min.css"/>
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
 
     <script type="application/javascript">
         // 各ロールをシンボルとして定義する
         ANONYMOUS = parseInt("01", 2);
+        ROLE_ANONYMOUS = parseInt("01", 2);
         ROLE_USER = parseInt("10", 2);
 
         // global variables

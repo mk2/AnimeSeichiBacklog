@@ -48,8 +48,7 @@ final class ImageServiceGroovyImpl implements ImageService {
         final BufferedImage thumbnail = Scalr.resize(
                 photo, Scalr.Method.SPEED, thumnailWidth, thumnailHeight, Scalr.OP_ANTIALIAS)
 
-        // それぞれ保存する
-        // ランダムなファイル名を生成
+        // A clojure for generate random png filename for each calling.
         def makeFilename = {
             System.currentTimeMillis() + "_" + RandomStringUtils.randomAlphanumeric(20) + ".png"
         }

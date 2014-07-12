@@ -15,14 +15,19 @@
         <!-- map page -->
         <intercept-url pattern="/map/**" access="permitAll"/>
 
-        <!-- each api for GET access -->
-        <intercept-url pattern="/f/**" method="GET" access="permitAll"/>
-        <intercept-url pattern="/r/**" method="GET" access="permitAll"/>
-        <intercept-url pattern="/u/**" method="GET" access="permitAll"/>
+        <!-- 各URLのアクセス権限設定 -->
+        <!-- ここでは一度ほぼすべてを許可しておいて、あとは個別にメソッドで設定する -->
 
-        <!-- each api for POST access -->
+        <!-- Feature access -->
+        <intercept-url pattern="/f/**" method="GET" access="permitAll"/>
         <intercept-url pattern="/f/**" method="POST" access="hasRole('ROLE_USER')"/>
+
+        <!-- R access -->
+        <intercept-url pattern="/r/**" method="GET" access="permitAll"/>
         <intercept-url pattern="/r/**" method="POST" access="permitAll"/>
+
+        <!-- User access -->
+        <intercept-url pattern="/u/**" method="GET" access="permitAll"/>
         <intercept-url pattern="/u/**" method="POST" access="permitAll"/>
 
         <!-- account management pages -->
@@ -38,14 +43,15 @@
                 authentication-failure-url="/"/>
 
         <logout
+                logout-url="/u/o"
+                logout-success-url="/"
                 delete-cookies="JSESSIONID"/>
 
-        <session-management
-                invalid-session-url="/">
-            <concurrency-control max-sessions="1" error-if-maximum-exceeded="true"/>
+        <session-management>
+        <concurrency-control max-sessions="1" error-if-maximum-exceeded="true"/>
         </session-management>
 
-        <remember-me data-source-ref="dataSource" user-service-ref="userDetailService"/>
+        <!--<remember-me data-source-ref="dataSource" user-service-ref="userDetailService"/>-->
 
         <!--
         Enable cross site request forgery vulnerability provision.

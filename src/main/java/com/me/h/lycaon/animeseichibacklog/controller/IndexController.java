@@ -4,7 +4,9 @@ import com.google.common.collect.Lists;
 import com.me.h.lycaon.animeseichibacklog.model.FeatureFormModel;
 import com.me.h.lycaon.animeseichibacklog.model.RemarkFormModel;
 import com.me.h.lycaon.animeseichibacklog.model.UserFormModel;
+import com.me.h.lycaon.animeseichibacklog.service.user.UserInfoService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -16,9 +18,9 @@ import java.util.Map;
 /**
  * A controller handles the almost all mappings to jsp files.
  * "/"(root, index) is handled in this contoller, so it named "IndexController".
- * <p/>
+ * <p>
  * Details of session attributes:
- * <p/>
+ * <p>
  * (1) bbox Stored user viewing area's bounding box lat/lng. Client side program determine the
  * value and fit user viewing area.
  * {
@@ -27,18 +29,18 @@ import java.util.Map;
  * 2: North East Lat
  * 3: North East Lng
  * }
- * <p/>
+ * <p>
  * (2) baseUrls Base URLs for client requests to server.
  * {
  * rsrcBaseUrl: for accessing javascript, css files..
  * photoBaseUrl: for accessing user posted photos.
  * }
- * <p/>
+ * <p>
  * (3) userRoles Role name of user, client change the user interface as to user role.
  * {
  * ROLE_USER, ANONYMOUS, etc
  * }
- * <p/>
+ * <p>
  * Created by lycaon_h on 2014/03/05.
  */
 @Slf4j
@@ -73,23 +75,26 @@ public class IndexController {
     @Value("${server.rsrcBaseUrl}")
     private String rsrcBaseUrl;
 
+    @Autowired
+    private UserInfoService userInfoService;
 
     @RequestMapping(value = "",
-                    method = RequestMethod.GET)
+            method = RequestMethod.GET)
     public String index(ModelMap model) {
         model.addAttribute("bbox",
-                           Lists.newArrayList(
-                                   initBboxSwLat, initBboxSwLng, initBboxNeLat, initBboxNeLng)
+                Lists.newArrayList(
+                        initBboxSwLat, initBboxSwLng, initBboxNeLat, initBboxNeLng)
         );
 
         Map<String, String> rsrcBaseUrlMap = new LinkedHashMap<>(2);
         rsrcBaseUrlMap.put("rsrcBaseUrl", rsrcBaseUrl);
         rsrcBaseUrlMap.put("photoBaseUrl", photoBaseUrl);
+
         model.addAttribute("baseUrls", rsrcBaseUrlMap);
 
-        model.addAttribute("userRoles", "ANONYMOUS");
+        model.addAttribute("userRoles", userInfoService.getUserRoles());
 
-        model.addAttribute("userAlias", "");
+        model.addAttribute("userAlias", userInfoService.getUserAlias());
 
         model.addAttribute("i18n_lang", i18n_lang);
 
@@ -98,16 +103,20 @@ public class IndexController {
 
 
     @RequestMapping(value = "login",
-                    method = RequestMethod.GET)
+            method = RequestMethod.GET)
     public String login(
             @ModelAttribute("userFormModel") UserFormModel userFormModel
     ) {
-        return "account-login";
+        if (userInfoService.isUserLogin()) {
+            return "map";
+        } else {
+            return "account-login";
+        }
     }
 
 
     @RequestMapping(value = "map/{bboxSwLat}/{bboxSwLng}/{bboxNeLat}/{bboxNeLng}/",
-                    method = RequestMethod.GET)
+            method = RequestMethod.GET)
     public String mapWithLatLng(
             @PathVariable Double bboxSwLat,
             @PathVariable Double bboxSwLng,
@@ -123,7 +132,7 @@ public class IndexController {
 
 
     @RequestMapping(value = "map",
-                    method = RequestMethod.GET)
+            method = RequestMethod.GET)
     public String map(
             @ModelAttribute("featureFormModel") FeatureFormModel featureFormModel,
             @ModelAttribute("remarkFormModel") RemarkFormModel remarkFormModel
@@ -133,21 +142,21 @@ public class IndexController {
 
 
     @RequestMapping(value = "about",
-                    method = RequestMethod.GET)
+            method = RequestMethod.GET)
     public String about() {
         return "about";
     }
 
 
     @RequestMapping(value = "usage",
-                    method = RequestMethod.GET)
+            method = RequestMethod.GET)
     public String usage() {
         return "usage";
     }
 
 
     @RequestMapping(value = "register",
-                    method = RequestMethod.GET)
+            method = RequestMethod.GET)
     public String register(
             @ModelAttribute("userFormModel") UserFormModel userFormModel
     ) {
@@ -156,42 +165,42 @@ public class IndexController {
 
 
     @RequestMapping(value = "withdraw",
-                    method = RequestMethod.GET)
+            method = RequestMethod.GET)
     public String withdraw() {
         return "account-withdraw";
     }
 
 
     @RequestMapping(value = "withdraw-complete",
-                    method = RequestMethod.GET)
+            method = RequestMethod.GET)
     public String withdrawComplete() {
         return "account-withdraw-complete";
     }
 
 
     @RequestMapping(value = "withdraw-failed",
-                    method = RequestMethod.GET)
+            method = RequestMethod.GET)
     public String withdrawFailed() {
         return "account-withdraw-failed";
     }
 
 
     @RequestMapping(value = "update",
-                    method = RequestMethod.GET)
+            method = RequestMethod.GET)
     public String update() {
         return "account-update";
     }
 
 
     @RequestMapping(value = "update-complete",
-                    method = RequestMethod.GET)
+            method = RequestMethod.GET)
     public String updateComplete() {
         return "account-update-complete";
     }
 
 
     @RequestMapping(value = "update-failed",
-                    method = RequestMethod.GET)
+            method = RequestMethod.GET)
     public String updateFailed() {
         return "account-update-failed";
     }

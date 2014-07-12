@@ -28,10 +28,10 @@ class UserFormModelToUser implements Converter<UserFormModel, User> {
     ) {
         User user = new User(userFormModel)
 
-        BufferedImage bImage = ImageIO.read(userFormModel
-                                                    .getUserImageFile()
-                                                    .getInputStream());
-        user.userImagePath = imageService.saveImageWithThumbnail(bImage);
+        BufferedImage bImage = ImageIO.read userFormModel
+                .getUserImageFile()
+                .getInputStream();
+        user.userImagePath = imageService.saveImageWithThumbnail bImage;
 
         return user
     }

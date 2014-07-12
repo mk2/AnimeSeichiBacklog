@@ -33,7 +33,7 @@ public interface UserInfoService {
     public String getUserEmail();
 
 
-    public boolean isUserEnabled();
+    public boolean isUserLogin();
 
 
     public String getUserTags();

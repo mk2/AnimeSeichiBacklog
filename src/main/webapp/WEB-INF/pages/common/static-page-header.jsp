@@ -9,11 +9,9 @@
 <link rel="stylesheet" href="${baseUrls.rsrcBaseUrl}/static-page.css"/>
 
 <!-- jQuery -->
-<script src="${baseUrls.rsrcBaseUrl}/scripts/lib/jquery-2.1.0.js"></script>
+<script src="//code.jquery.com/jquery-2.1.1.min.js"></script>
 
 <!-- Bootstrap -->
-<link rel="stylesheet"
-      href="${baseUrls.rsrcBaseUrl}/scripts/lib/bootstrap-3.1.1-dist/css/bootstrap.min.css"/>
-<link rel="stylesheet"
-      href="${baseUrls.rsrcBaseUrl}/scripts/lib/bootstrap-3.1.1-dist/css/bootstrap-theme.min.css"/>
-<script src="${baseUrls.rsrcBaseUrl}/scripts/lib/bootstrap-3.1.1-dist/js/bootstrap.min.js"></script>
+<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>

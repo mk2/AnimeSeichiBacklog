@@ -13,6 +13,7 @@ import org.springframework.security.core.userdetails.User as UserDetailsUser
 import org.springframework.stereotype.Service
 
 /**
+ * User information retain service.
  * Created by lycaon_h on 2014/03/10.
  */
 @CompileStatic
@@ -27,7 +28,14 @@ final class UserInfoServiceGroovyImpl implements UserInfoService {
     @Autowired
     UserCrudService userCrudService
 
-
+    /**
+     * Login system with userName and userPassword.
+     * It assumed that user auth info is already loaded into auth manager.
+     * In this system, user auth info load at "resources/spring/securityContext.xml".
+     * @param userName
+     * @param userPassword
+     * @return
+     */
     @Override
     boolean login(
             String userName,
@@ -55,6 +63,8 @@ final class UserInfoServiceGroovyImpl implements UserInfoService {
         } else if (auth.principal instanceof UserDetailsUser) {
             return userCrudService.readByName(
                     (auth.principal as UserDetailsUser).username).userId
+        } else {
+            return -1L
         }
     }
 
@@ -76,7 +86,11 @@ final class UserInfoServiceGroovyImpl implements UserInfoService {
         return auth.authorities as Set<String>
     }
 
-
+    /**
+     * Get user alias (the name revealed to everyone.)
+     * If user is anonymous, return "NO NAME".
+     * @return
+     */
     @Override
     String getUserAlias() {
         long id = getUserId()
@@ -88,7 +102,11 @@ final class UserInfoServiceGroovyImpl implements UserInfoService {
         }
     }
 
-
+    /**
+     * Get user image path (the image revealed to everyone.)
+     * If user is anonymous, return "nophoto.png".
+     * @return
+     */
     @Override
     String getUserImagePath() {
         long id = getUserId()
@@ -100,7 +118,11 @@ final class UserInfoServiceGroovyImpl implements UserInfoService {
         }
     }
 
-
+    /**
+     * Get user email address (the email address not revealed to anyone.)
+     * If user is anonymous, return ""(empty string).
+     * @return
+     */
     @Override
     String getUserEmail() {
         long id = getUserId()
@@ -114,14 +136,10 @@ final class UserInfoServiceGroovyImpl implements UserInfoService {
 
 
     @Override
-    boolean isUserEnabled() {
-        long id = getUserId()
-
-        if (id == -1L) {
-            return false
-        } else {
-            return userCrudService.readById(id).userEmail
-        }
+    boolean isUserLogin() {
+        boolean isLogin = -1L != getUserId()
+        log.info "### user login is " + isLogin
+        return isLogin
     }
 
 

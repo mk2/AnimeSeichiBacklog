@@ -47,7 +47,7 @@
                     <ul class="dropdown-menu">
                         <li><a href="/register">ユーザー作成</a></li>
                         <li><a href="/update">ユーザー更新</a></li>
-                        <li><a href="/j_spring_security_logout">ログアウト</a></li>
+                        <li><a href="/u/o">ログアウト</a></li>
                         <li class="divider"></li>
                         <li><a href="/withdraw">ユーザー削除</a></li>
                     </ul>

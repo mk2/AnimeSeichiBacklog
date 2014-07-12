@@ -40,7 +40,7 @@ MapView is hoding map object, and treating popups.
         this.map = L.map(mapId, {
           zoomControl: false
         }).fitBounds([[this.options.initBbox[0], this.options.initBbox[1]], [this.options.initBbox[2], this.options.initBbox[3]]]);
-        L.tileLayer('http://{s}.tile.cloudmade.com/95b6020b5a5c443da89d923d8706d168/997/256/{z}/{x}/{y}.png', {
+        L.tileLayer('http://{s}.tiles.mapbox.com/v3/mk2.inned2mk/{z}/{x}/{y}.png', {
           attribution: 'Map data &copy',
           maxZoom: this.options.maxZoom
         }).addTo(this.map);
