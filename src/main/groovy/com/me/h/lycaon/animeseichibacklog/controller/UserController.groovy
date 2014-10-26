@@ -1,11 +1,10 @@
 package com.me.h.lycaon.animeseichibacklog.controller
 
-import com.me.h.lycaon.animeseichibacklog.controller.exception.RequestException
 import com.me.h.lycaon.animeseichibacklog.domain.User
 import com.me.h.lycaon.animeseichibacklog.model.UserFormModel
 import com.me.h.lycaon.animeseichibacklog.service.crud.UserCrudService
 import com.me.h.lycaon.animeseichibacklog.service.user.UserInfoService
-import lombok.extern.slf4j.Slf4j
+import groovy.util.logging.Slf4j
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.core.convert.ConversionService
@@ -31,15 +30,15 @@ import javax.validation.Valid
 public class UserController {
 
     @Autowired
-    private UserCrudService userCrudService;
+    private UserCrudService userCrudService
 
     @Autowired
-    private UserInfoService userInfoService;
+    private UserInfoService userInfoService
 
 
     @Autowired
     @Qualifier("conversionService")
-    private ConversionService conversionService;
+    private ConversionService conversionService
 
     /**
      * Login process
@@ -49,23 +48,23 @@ public class UserController {
      * @return Login success -> redirect to "/map", login failure -> redirect to "/"
      */
     @RequestMapping(value = "/l", method = RequestMethod.POST)
-    public String login(
+    def login(
             @Valid @ModelAttribute("userFormModel")
             final UserFormModel userFormModel,
             final BindingResult result,
             ModelMap model
-    ) throws RequestException {
-        final String userEmail = userFormModel.getUserEmail();
-        final String userPassword = userFormModel.getUserPassword();
+    ) {
+        final String userEmail = userFormModel.getUserEmail()
+        final String userPassword = userFormModel.getUserPassword()
 
-        User user = userCrudService.readByEmail(userEmail);
+        User user = userCrudService.readByEmail(userEmail)
 
         if (userInfoService.login(user.getUserName(), userPassword)) {
-            model.addAttribute("userRoles", userInfoService.getUserRoles());
-            model.addAttribute("userAlias", userInfoService.getUserAlias());
-            return "redirect:/map";
+            model.addAttribute("userRoles", userInfoService.getUserRoles())
+            model.addAttribute("userAlias", userInfoService.getUserAlias())
+            return "redirect:/map"
         } else {
-            return "redirect:/";
+            return "redirect:/"
         }
     }
 
@@ -76,13 +75,13 @@ public class UserController {
      */
     @PreAuthorize("hasAuthority('ROLE_USER')")
     @RequestMapping(value = "/o", method = RequestMethod.GET)
-    public String logout(
+    def logout(
             ModelMap model
     ) {
-        SecurityContextHolder.clearContext();
-        model.addAttribute("userRoles", "");
-        model.addAttribute("userAlias", "");
-        return "redirect:/";
+        SecurityContextHolder.clearContext()
+        model.addAttribute("userRoles", "")
+        model.addAttribute("userAlias", "")
+        return "redirect:/"
     }
 
     /**
@@ -93,23 +92,23 @@ public class UserController {
      * @return Login success -> redirect to "/map", login failure -> redirect to "/"
      */
     @RequestMapping(value = "/c", method = RequestMethod.POST)
-    public String create(
+    def create(
             @Valid @ModelAttribute("userFormModel")
             final UserFormModel userFormModel,
             final BindingResult result,
             ModelMap model
-    ) throws Exception {
-        User user = conversionService.convert(userFormModel, User.class);
-        long userId = userCrudService.create(user);
+    ) {
+        User user = conversionService.convert(userFormModel, User.class)
+        long userId = userCrudService.create(user)
 
-        User createdUser = userCrudService.readById(userId);
+        User createdUser = userCrudService.readById(userId)
 
         if (userInfoService.login(createdUser.getUserName(), user.getUserPassword())) {
-            model.addAttribute("userRoles", userInfoService.getUserRoles());
-            model.addAttribute("userAlias", userInfoService.getUserAlias());
-            return "redirect:/map";
+            model.addAttribute("userRoles", userInfoService.getUserRoles())
+            model.addAttribute("userAlias", userInfoService.getUserAlias())
+            return "redirect:/map"
         } else {
-            return "redirect:/";
+            return "redirect:/"
         }
     }
 
@@ -120,7 +119,7 @@ public class UserController {
      */
     @PreAuthorize("hasAuthority('ROLE_USER')")
     @RequestMapping(value = "/u", method = RequestMethod.POST)
-    public void update(
+    def update(
             @Valid @ModelAttribute("userFormModel") UserFormModel userFormModel,
             BindingResult result,
             ModelMap model
@@ -133,18 +132,18 @@ public class UserController {
      */
     @PreAuthorize("hasAuthority('ROLE_USER')")
     @RequestMapping(value = "/d", method = RequestMethod.DELETE)
-    public String delete(
+    def delete(
             ModelMap model
     ) {
-        long userId = userInfoService.getUserId();
+        long userId = userInfoService.getUserId()
 
-        userCrudService.delete(userId);
+        userCrudService.delete(userId)
 
         if (userCrudService.readById(userId) == null) {
-            model.clear();
-            return "redirect:/withdraw-complete";
+            model.clear()
+            return "redirect:/withdraw-complete"
         } else {
-            return "redirect:/";
+            return "redirect:/"
         }
     }
 

@@ -5,7 +5,7 @@ import com.me.h.lycaon.animeseichibacklog.model.FeatureFormModel
 import com.me.h.lycaon.animeseichibacklog.model.RemarkFormModel
 import com.me.h.lycaon.animeseichibacklog.model.UserFormModel
 import com.me.h.lycaon.animeseichibacklog.service.user.UserInfoService
-import lombok.extern.slf4j.Slf4j
+import groovy.util.logging.Slf4j
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Controller
@@ -46,69 +46,69 @@ public class IndexController {
      * It is "en" -> selecting english (but many texts have not yet been translated...)
      */
     @Value('${server.i18n_lang}')
-    private String i18n_lang;
+    private String i18n_lang
 
     @Value('${server.initBbox.sw.lat}')
-    private Double initBboxSwLat;
+    private Double initBboxSwLat
 
     @Value('${server.initBbox.sw.lng}')
-    private Double initBboxSwLng;
+    private Double initBboxSwLng
 
     @Value('${server.initBbox.ne.lat}')
-    private Double initBboxNeLat;
+    private Double initBboxNeLat
 
     @Value('${server.initBbox.ne.lng}')
-    private Double initBboxNeLng;
+    private Double initBboxNeLng
 
     @Value('${server.photoBaseUrl}')
-    private String photoBaseUrl;
+    private String photoBaseUrl
 
     @Value('${server.rsrcBaseUrl}')
-    private String rsrcBaseUrl;
+    private String rsrcBaseUrl
 
     @Autowired
-    private UserInfoService userInfoService;
+    private UserInfoService userInfoService
 
     @RequestMapping(value = "",
             method = RequestMethod.GET)
-    public String index(ModelMap model) {
+    def index(ModelMap model) {
         model.addAttribute("bbox",
                 Lists.newArrayList(
                         initBboxSwLat, initBboxSwLng, initBboxNeLat, initBboxNeLng)
-        );
+        )
 
-        Map<String, String> rsrcBaseUrlMap = new LinkedHashMap<>(2);
-        rsrcBaseUrlMap.put("rsrcBaseUrl", rsrcBaseUrl);
-        rsrcBaseUrlMap.put("photoBaseUrl", photoBaseUrl);
+        Map<String, String> rsrcBaseUrlMap = new LinkedHashMap<>(2)
+        rsrcBaseUrlMap.put("rsrcBaseUrl", rsrcBaseUrl)
+        rsrcBaseUrlMap.put("photoBaseUrl", photoBaseUrl)
 
-        model.addAttribute("baseUrls", rsrcBaseUrlMap);
+        model.addAttribute("baseUrls", rsrcBaseUrlMap)
 
-        model.addAttribute("userRoles", userInfoService.getUserRoles());
+        model.addAttribute("userRoles", userInfoService.getUserRoles())
 
-        model.addAttribute("userAlias", userInfoService.getUserAlias());
+        model.addAttribute("userAlias", userInfoService.getUserAlias())
 
-        model.addAttribute("i18n_lang", i18n_lang);
+        model.addAttribute("i18n_lang", i18n_lang)
 
-        return "index";
+        return "index"
     }
 
 
     @RequestMapping(value = "login",
             method = RequestMethod.GET)
-    public String login(
+    def login(
             @ModelAttribute("userFormModel") UserFormModel userFormModel
     ) {
         if (userInfoService.isUserLogin()) {
-            return "map";
+            return "map"
         } else {
-            return "account-login";
+            return "account-login"
         }
     }
 
 
     @RequestMapping(value = "map/{bboxSwLat}/{bboxSwLng}/{bboxNeLat}/{bboxNeLng}/",
             method = RequestMethod.GET)
-    public String mapWithLatLng(
+    def mapWithLatLng(
             @PathVariable Double bboxSwLat,
             @PathVariable Double bboxSwLng,
             @PathVariable Double bboxNeLat,
@@ -117,82 +117,82 @@ public class IndexController {
             @ModelAttribute("remarkFormModel") RemarkFormModel remarkFormModel,
             ModelMap model
     ) {
-        model.put("bbox", Lists.newArrayList(bboxSwLat, bboxSwLng, bboxNeLat, bboxNeLng));
-        return "map";
+        model.put("bbox", Lists.newArrayList(bboxSwLat, bboxSwLng, bboxNeLat, bboxNeLng))
+        return "map"
     }
 
 
     @RequestMapping(value = "map",
             method = RequestMethod.GET)
-    public String map(
+    def map(
             @ModelAttribute("featureFormModel") FeatureFormModel featureFormModel,
             @ModelAttribute("remarkFormModel") RemarkFormModel remarkFormModel
     ) {
-        return "map";
+        return "map"
     }
 
 
     @RequestMapping(value = "about",
             method = RequestMethod.GET)
-    public String about() {
-        return "about";
+    def about() {
+        return "about"
     }
 
 
     @RequestMapping(value = "usage",
             method = RequestMethod.GET)
-    public String usage() {
-        return "usage";
+    def usage() {
+        return "usage"
     }
 
 
     @RequestMapping(value = "register",
             method = RequestMethod.GET)
-    public String register(
+    def register(
             @ModelAttribute("userFormModel") UserFormModel userFormModel
     ) {
-        return "account-register";
+        return "account-register"
     }
 
 
     @RequestMapping(value = "withdraw",
             method = RequestMethod.GET)
-    public String withdraw() {
-        return "account-withdraw";
+    def withdraw() {
+        "account-withdraw"
     }
 
 
     @RequestMapping(value = "withdraw-complete",
             method = RequestMethod.GET)
-    public String withdrawComplete() {
-        return "account-withdraw-complete";
+    def withdrawComplete() {
+        "account-withdraw-complete"
     }
 
 
     @RequestMapping(value = "withdraw-failed",
             method = RequestMethod.GET)
-    public String withdrawFailed() {
-        return "account-withdraw-failed";
+    def withdrawFailed() {
+        "account-withdraw-failed"
     }
 
 
     @RequestMapping(value = "update",
             method = RequestMethod.GET)
-    public String update() {
-        return "account-update";
+    def update() {
+        "account-update"
     }
 
 
     @RequestMapping(value = "update-complete",
             method = RequestMethod.GET)
-    public String updateComplete() {
-        return "account-update-complete";
+    def updateComplete() {
+        "account-update-complete"
     }
 
 
     @RequestMapping(value = "update-failed",
             method = RequestMethod.GET)
-    public String updateFailed() {
-        return "account-update-failed";
+    def updateFailed() {
+        "account-update-failed"
     }
 }

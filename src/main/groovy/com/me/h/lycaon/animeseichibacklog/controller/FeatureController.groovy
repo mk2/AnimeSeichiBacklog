@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.*
 import org.springframework.web.servlet.ModelAndView
 
 import javax.validation.Valid
-import java.util.concurrent.Callable
 
 /**
  * A Controller for feature crud manipulations.
@@ -57,15 +56,13 @@ public class FeatureController {
             final BindingResult result
     ) {
         { ->
-            log.info("### RequestParams:  " + featureFormModel.toString())
+            log.info("### RequestParams:  ${featureFormModel.toString()}")
 
             Feature feature = conversionService.convert(featureFormModel, Feature.class)
             featureCrudService.create(feature)
 
             ModelAndView modelAndView = new ModelAndView("redirect:/map")
             modelAndView.addObject("bbox", featureFormModel.getBbox())
-
-            modelAndView
         }
     }
 
@@ -78,13 +75,13 @@ public class FeatureController {
     @ResponseBody
     @RequestMapping(value = "/xr/{id}/",
             method = RequestMethod.GET)
-    public org.geojson.Feature readById(
+    def readById(
             @PathVariable("id") final long featureId
     ) {
-        return conversionService.convert(
+        conversionService.convert(
                 featureCrudService.readById(featureId),
                 org.geojson.Feature.class
-        );
+        )
     }
 
     /**
@@ -101,38 +98,35 @@ public class FeatureController {
     @ResponseBody
     @RequestMapping(value = "/xr/{lngLowLeft}/{latLowLeft}/{lngUpRight}/{latUpRight}/",
             method = RequestMethod.GET)
-    public Callable<FeatureCollection> readByBBOX(
+    def readByBBOX(
             @PathVariable final double lngLowLeft,
             @PathVariable final double latLowLeft,
             @PathVariable final double lngUpRight,
             @PathVariable final double latUpRight,
             @MatrixVariable final Map<String, String> mVars
-    ) throws Exception {
-        return new Callable<FeatureCollection>() {
-            @Override
-            public FeatureCollection call() throws Exception {
-                List<Feature> features = featureCrudService.readByBBOX(
-                        lngLowLeft,
-                        latLowLeft,
-                        lngUpRight,
-                        latUpRight,
-                        mVars
-                );
+    ) {
+        { ->
+            List<Feature> features = featureCrudService.readByBBOX(
+                    lngLowLeft,
+                    latLowLeft,
+                    lngUpRight,
+                    latUpRight,
+                    mVars
+            )
 
-                FeatureCollection geoJsonFeatureCollections = new FeatureCollection();
+            FeatureCollection geoJsonFeatureCollections = new FeatureCollection()
 
-                for (Feature feature : features) {
-                    geoJsonFeatureCollections.add(
-                            conversionService.convert(
-                                    feature,
-                                    org.geojson.Feature.class
-                            )
-                    );
-                }
-
-                return geoJsonFeatureCollections;
+            for (Feature feature : features) {
+                geoJsonFeatureCollections.add(
+                        conversionService.convert(
+                                feature,
+                                org.geojson.Feature.class
+                        )
+                )
             }
-        };
+
+            geoJsonFeatureCollections
+        }
     }
 
     /**
@@ -145,9 +139,9 @@ public class FeatureController {
     @ResponseBody
     @RequestMapping(value = "/xs",
             method = RequestMethod.GET)
-    public long readSize(
-    ) throws Exception {
-        return featureCrudService.count();
+    def readSize(
+    ) {
+        featureCrudService.count()
     }
 
     /**
@@ -162,25 +156,20 @@ public class FeatureController {
     @PreAuthorize("hasAuthority('ROLE_USER')")
     @RequestMapping(value = "/u",
             method = RequestMethod.POST)
-    public Callable<ModelAndView> updateFeature(
+    def updateFeature(
             @Valid @ModelAttribute("featureFormModel")
             final FeatureFormModel featureFormModel,
             final BindingResult result,
             @RequestParam("featureId")
             final long featureId
-    ) throws Exception {
-        return new Callable<ModelAndView>() {
-            @Override
-            public ModelAndView call() throws Exception {
-                Feature feature = conversionService.convert(featureFormModel, Feature.class);
-                featureCrudService.update(featureId, feature);
+    ) {
+        { ->
+            Feature feature = conversionService.convert(featureFormModel, Feature.class)
+            featureCrudService.update(featureId, feature)
 
-                ModelAndView modelAndView = new ModelAndView("redirect:/map");
-                modelAndView.addObject("bbox", featureFormModel.getBbox());
-
-                return modelAndView;
-            }
-        };
+            ModelAndView modelAndView = new ModelAndView("redirect:/map")
+            modelAndView.addObject("bbox", featureFormModel.getBbox())
+        }
     }
 
     /**
@@ -191,10 +180,10 @@ public class FeatureController {
     @PreAuthorize("hasAuthority('ROLE_USER')")
     @RequestMapping(value = "/d/{id}/",
             method = RequestMethod.DELETE)
-    public void deleteFeature(
+    def deleteFeature(
             @PathVariable("id") long featureId
     ) {
-        featureCrudService.delete(featureId);
+        featureCrudService.delete(featureId)
     }
 
 }
