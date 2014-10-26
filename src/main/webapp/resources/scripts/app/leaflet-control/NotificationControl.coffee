@@ -4,7 +4,8 @@ is passed to client via a jsp model at page loading.
 ###
 define ['leaflet', 'jquery'], (L, $) ->
     NotificationControl = L.Control.extend
-        options:
+
+    options:
             position: 'topleft'
 
         onAdd: (map) ->

@@ -7,10 +7,10 @@
  https://github.com/jacobtoye
  */
 !function (t, e) {
-    L.drawVersion = "0.2.4-dev", L.drawLocal = {draw: {toolbar: {actions: {title: "描画を中止する。", text: "中止"}, undo: {title: "最後に描画したポイントを削除する。", text: "最後に描画したポイントを削除"}, buttons: {polyline: "折れ線を描く", polygon: "多角形を描く", rectangle: "四角形を描く", circle: "円を描く", marker: "印を描く"}}, handlers: {circle: {tooltip: {start: "クリック後、ドラッグして円を描いてください。"}}, marker: {tooltip: {start: "地図の任意の点をクリックすると印が置かれます。"}}, polygon: {tooltip: {start: "クリックすると多角形の描画を開始します。", cont: "描画を続ける場合は、クリックし続けてください。", end: "多角形を閉じるために、最初の点をクリックしてください。"}}, polyline: {error: "<strong>エラー:</strong> 折れ線はクロスさせないでください！", tooltip: {start: "クリックすると折れ線の描画を開始します。", cont: "描画を続ける場合は、描画を続ける場合はクリックし続けてください。", end: "折れ線の描画を終わらせるために、最後の点をクリックしてください。"}}, rectangle: {tooltip: {start: "クリックし、ドラッグすることで四角形を描画できます。"}}, simpleshape: {tooltip: {end: "マウスボタンを離すと描画が修了します。"}}}}, edit: {toolbar: {actions: {save: {title: "変更を保存します。", text: "保存"}, cancel: {title: "編集を中止し、すべての変更を破棄します。", text: "中止"}}, buttons: {edit: "レイヤーを編集する。", editDisabled: "編集できるレイヤーがありません。", remove: "レイヤーを削除する。", removeDisabled: "削除できるレイヤーがありません。"}}, handlers: {edit: {tooltip: {text: "ハンドルかマーカーをドラッグして、地物を編集してください。", subtext: "変更をアンドゥするにはキャンセルをクリックしてください。"}}, remove: {tooltip: {text: "地物をクリックすると削除できます。"}}}}}, L.Draw = {}, L.Draw.Feature = L.Handler.extend({includes: L.Mixin.Events, initialize: function (t, e) {
+    L.drawVersion = "0.2.4-dev", L.drawLocal = {draw: {toolbar: {actions: {title: "Cancel drawing", text: "Cancel"}, undo: {title: "Delete last point drawn", text: "Delete last point"}, buttons: {polyline: "Draw a polyline", polygon: "Draw a polygon", rectangle: "Draw a rectangle", circle: "Draw a circle", marker: "Draw a marker"}}, handlers: {circle: {tooltip: {start: "Click and drag to draw circle."}}, marker: {tooltip: {start: "Click map to place marker."}}, polygon: {tooltip: {start: "Click to start drawing shape.", cont: "Click to continue drawing shape.", end: "Click first point to close this shape."}}, polyline: {error: "<strong>Error:</strong> shape edges cannot cross!", tooltip: {start: "Click to start drawing line.", cont: "Click to continue drawing line.", end: "Click last point to finish line."}}, rectangle: {tooltip: {start: "Click and drag to draw rectangle."}}, simpleshape: {tooltip: {end: "Release mouse to finish drawing."}}}}, edit: {toolbar: {actions: {save: {title: "Save changes.", text: "Save"}, cancel: {title: "Cancel editing, discards all changes.", text: "Cancel"}}, buttons: {edit: "Edit layers.", editDisabled: "No layers to edit.", remove: "Delete layers.", removeDisabled: "No layers to delete."}}, handlers: {edit: {tooltip: {text: "Drag handles, or marker to edit feature.", subtext: "Click cancel to undo changes."}}, remove: {tooltip: {text: "Click on a feature to remove"}}}}}, L.Draw = {}, L.Draw.Feature = L.Handler.extend({includes: L.Mixin.Events, initialize: function (t, e) {
         this._map = t, this._container = t._container, this._overlayPane = t._panes.overlayPane, this._popupPane = t._panes.popupPane, e && e.shapeOptions && (e.shapeOptions = L.Util.extend({}, this.options.shapeOptions, e.shapeOptions)), L.setOptions(this, e)
     }, enable: function () {
-        this._enabled || (this.fire("enabled", {handler: this.type}), this._map.fire("draw:drawstart", {layerType: this.type}), L.Handler.prototype.enable.call(this))
+        this._enabled || (L.Handler.prototype.enable.call(this), this.fire("enabled", {handler: this.type}), this._map.fire("draw:drawstart", {layerType: this.type}))
     }, disable: function () {
         this._enabled && (L.Handler.prototype.disable.call(this), this._map.fire("draw:drawstop", {layerType: this.type}), this.fire("disabled", {handler: this.type}))
     }, addHooks: function () {
@@ -37,10 +37,10 @@
         }
     }, addVertex: function (t) {
         var e = this._markers.length;
-        return e > 0 && !this.options.allowIntersection && this._poly.newLatLngIntersects(t) ? void this._showErrorTooltip() : (this._errorShown && this._hideErrorTooltip(), this._markers.push(this._createMarker(t)), this._poly.addLatLng(t), 2 === this._poly.getLatLngs().length && this._map.addLayer(this._poly), void this._vertexChanged(t, !0))
+        return e > 0 && !this.options.allowIntersection && this._poly.newLatLngIntersects(t) ? (this._showErrorTooltip(), void 0) : (this._errorShown && this._hideErrorTooltip(), this._markers.push(this._createMarker(t)), this._poly.addLatLng(t), 2 === this._poly.getLatLngs().length && this._map.addLayer(this._poly), this._vertexChanged(t, !0), void 0)
     }, _finishShape: function () {
         var t = this._poly.newLatLngIntersects(this._poly.getLatLngs()[0], !0);
-        return!this.options.allowIntersection && t || !this._shapeIsValid() ? void this._showErrorTooltip() : (this._fireCreatedEvent(), this.disable(), void(this.options.repeatMode && this.enable()))
+        return!this.options.allowIntersection && t || !this._shapeIsValid() ? (this._showErrorTooltip(), void 0) : (this._fireCreatedEvent(), this.disable(), this.options.repeatMode && this.enable(), void 0)
     }, _shapeIsValid: function () {
         return!0
     }, _onZoomEnd: function () {
@@ -123,20 +123,25 @@
         L.Draw.Feature.prototype.addHooks.call(this), this._map && (this._mapDraggable = this._map.dragging.enabled(), this._mapDraggable && this._map.dragging.disable(), this._container.style.cursor = "crosshair", this._tooltip.updateContent({text: this._initialLabelText}), this._map.on("mousedown", this._onMouseDown, this).on("mousemove", this._onMouseMove, this))
     }, removeHooks: function () {
         L.Draw.Feature.prototype.removeHooks.call(this), this._map && (this._mapDraggable && this._map.dragging.enable(), this._container.style.cursor = "", this._map.off("mousedown", this._onMouseDown, this).off("mousemove", this._onMouseMove, this), L.DomEvent.off(e, "mouseup", this._onMouseUp, this), this._shape && (this._map.removeLayer(this._shape), delete this._shape)), this._isDrawing = !1
+    }, _getTooltipText: function () {
+        return{text: this._endLabelText}
     }, _onMouseDown: function (t) {
         this._isDrawing = !0, this._startLatLng = t.latlng, L.DomEvent.on(e, "mouseup", this._onMouseUp, this).preventDefault(t.originalEvent)
     }, _onMouseMove: function (t) {
         var e = t.latlng;
-        this._tooltip.updatePosition(e), this._isDrawing && (this._tooltip.updateContent({text: this._endLabelText}), this._drawShape(e))
+        this._tooltip.updatePosition(e), this._isDrawing && (this._tooltip.updateContent(this._getTooltipText()), this._drawShape(e))
     }, _onMouseUp: function () {
         this._shape && this._fireCreatedEvent(), this.disable(), this.options.repeatMode && this.enable()
-    }}), L.Draw.Rectangle = L.Draw.SimpleShape.extend({statics: {TYPE: "rectangle"}, options: {shapeOptions: {stroke: !0, color: "#f06eaa", weight: 4, opacity: .5, fill: !0, fillColor: null, fillOpacity: .2, clickable: !0}}, initialize: function (t, e) {
+    }}), L.Draw.Rectangle = L.Draw.SimpleShape.extend({statics: {TYPE: "rectangle"}, options: {shapeOptions: {stroke: !0, color: "#f06eaa", weight: 4, opacity: .5, fill: !0, fillColor: null, fillOpacity: .2, clickable: !0}, metric: !0}, initialize: function (t, e) {
         this.type = L.Draw.Rectangle.TYPE, this._initialLabelText = L.drawLocal.draw.handlers.rectangle.tooltip.start, L.Draw.SimpleShape.prototype.initialize.call(this, t, e)
     }, _drawShape: function (t) {
         this._shape ? this._shape.setBounds(new L.LatLngBounds(this._startLatLng, t)) : (this._shape = new L.Rectangle(new L.LatLngBounds(this._startLatLng, t), this.options.shapeOptions), this._map.addLayer(this._shape))
     }, _fireCreatedEvent: function () {
         var t = new L.Rectangle(this._shape.getBounds(), this.options.shapeOptions);
         L.Draw.SimpleShape.prototype._fireCreatedEvent.call(this, t)
+    }, _getTooltipText: function () {
+        var t, e, i, o = L.Draw.SimpleShape.prototype._getTooltipText.call(this), a = this._shape;
+        return a && (t = this._shape.getLatLngs(), e = L.GeometryUtil.geodesicArea(t), i = L.GeometryUtil.readableArea(e, this.options.metric)), {text: o.text, subtext: i}
     }}), L.Draw.Circle = L.Draw.SimpleShape.extend({statics: {TYPE: "circle"}, options: {shapeOptions: {stroke: !0, color: "#f06eaa", weight: 4, opacity: .5, fill: !0, fillColor: null, fillOpacity: .2, clickable: !0}, showRadius: !0, metric: !0}, initialize: function (t, e) {
         this.type = L.Draw.Circle.TYPE, this._initialLabelText = L.drawLocal.draw.handlers.circle.tooltip.start, L.Draw.SimpleShape.prototype.initialize.call(this, t, e)
     }, _drawShape: function (t) {
@@ -315,7 +320,7 @@
         return Math.abs(a)
     }, readableArea: function (t, e) {
         var i;
-        return e ? i = t >= 1e4 ? (1e-4 * t).toFixed(2) + " ha" : t.toFixed(2) + " m&sup2;" : (t *= .836127, i = t >= 3097600 ? (t / 3097600).toFixed(2) + " mi&sup2;" : t >= 4840 ? (t / 4840).toFixed(2) + " acres" : Math.ceil(t) + " yd&sup2;"), i
+        return e ? i = t >= 1e4 ? (1e-4 * t).toFixed(2) + " ha" : t.toFixed(2) + " m&sup2;" : (t /= .836127, i = t >= 3097600 ? (t / 3097600).toFixed(2) + " mi&sup2;" : t >= 4840 ? (t / 4840).toFixed(2) + " acres" : Math.ceil(t) + " yd&sup2;"), i
     }, readableDistance: function (t, e) {
         var i;
         return e ? i = t > 1e3 ? (t / 1e3).toFixed(2) + " km" : Math.ceil(t) + " m" : (t *= 1.09361, i = t > 1760 ? (t / 1760).toFixed(2) + " miles" : Math.ceil(t) + " yd"), i
@@ -347,8 +352,8 @@
     }}), L.Control.Draw = L.Control.extend({options: {position: "topleft", draw: {}, edit: !1}, initialize: function (t) {
         if (L.version < "0.7")throw new Error("Leaflet.draw 0.2.3+ requires Leaflet 0.7.0+. Download latest from https://github.com/Leaflet/Leaflet/");
         L.Control.prototype.initialize.call(this, t);
-        var e, i;
-        this._toolbars = {}, L.DrawToolbar && this.options.draw && (i = new L.DrawToolbar(this.options.draw), e = L.stamp(i), this._toolbars[e] = i, this._toolbars[e].on("enable", this._toolbarEnabled, this)), L.EditToolbar && this.options.edit && (i = new L.EditToolbar(this.options.edit), e = L.stamp(i), this._toolbars[e] = i, this._toolbars[e].on("enable", this._toolbarEnabled, this))
+        var e;
+        this._toolbars = {}, L.DrawToolbar && this.options.draw && (e = new L.DrawToolbar(this.options.draw), this._toolbars[L.DrawToolbar.TYPE] = e, this._toolbars[L.DrawToolbar.TYPE].on("enable", this._toolbarEnabled, this)), L.EditToolbar && this.options.edit && (e = new L.EditToolbar(this.options.edit), this._toolbars[L.EditToolbar.TYPE] = e, this._toolbars[L.EditToolbar.TYPE].on("enable", this._toolbarEnabled, this))
     }, onAdd: function (t) {
         var e, i = L.DomUtil.create("div", "leaflet-draw"), o = !1, a = "leaflet-draw-toolbar-top";
         for (var s in this._toolbars)this._toolbars.hasOwnProperty(s) && (e = this._toolbars[s].addToolbar(t), e && (o || (L.DomUtil.hasClass(e, a) || L.DomUtil.addClass(e.childNodes[0], a), o = !0), i.appendChild(e)));
@@ -358,8 +363,8 @@
     }, setDrawingOptions: function (t) {
         for (var e in this._toolbars)this._toolbars[e]instanceof L.DrawToolbar && this._toolbars[e].setOptions(t)
     }, _toolbarEnabled: function (t) {
-        var e = "" + L.stamp(t.target);
-        for (var i in this._toolbars)this._toolbars.hasOwnProperty(i) && i !== e && this._toolbars[i].disable()
+        var e = t.target;
+        for (var i in this._toolbars)this._toolbars[i] !== e && this._toolbars[i].disable()
     }}), L.Map.mergeOptions({drawControlTooltips: !0, drawControl: !1}), L.Map.addInitHook(function () {
         this.options.drawControl && (this.drawControl = new L.Control.Draw, this.addControl(this.drawControl))
     }), L.Toolbar = L.Class.extend({includes: [L.Mixin.Events], initialize: function (t) {
@@ -412,7 +417,7 @@
         return this._container && L.DomUtil.addClass(this._container, "leaflet-error-draw-tooltip"), this
     }, removeError: function () {
         return this._container && L.DomUtil.removeClass(this._container, "leaflet-error-draw-tooltip"), this
-    }}), L.DrawToolbar = L.Toolbar.extend({options: {polyline: {}, polygon: {}, rectangle: {}, circle: {}, marker: {}}, initialize: function (t) {
+    }}), L.DrawToolbar = L.Toolbar.extend({statics: {TYPE: "draw"}, options: {polyline: {}, polygon: {}, rectangle: {}, circle: {}, marker: {}}, initialize: function (t) {
         for (var e in this.options)this.options.hasOwnProperty(e) && t[e] && (t[e] = L.extend({}, this.options[e], t[e]));
         this._toolbarClass = "leaflet-draw-draw", L.Toolbar.prototype.initialize.call(this, t)
     }, getModeHandlers: function (t) {
@@ -431,8 +436,8 @@
     }, setOptions: function (t) {
         L.setOptions(this, t);
         for (var e in this._modes)this._modes.hasOwnProperty(e) && t.hasOwnProperty(e) && this._modes[e].handler.setOptions(t[e])
-    }}), L.EditToolbar = L.Toolbar.extend({options: {edit: {selectedPathOptions: {color: "#fe57a1", opacity: .6, dashArray: "10, 10", fill: !0, fillColor: "#fe57a1", fillOpacity: .1}}, remove: {}, featureGroup: null}, initialize: function (t) {
-        t.edit && ("undefined" == typeof t.edit.selectedPathOptions && (t.edit.selectedPathOptions = this.options.edit.selectedPathOptions), t.edit = L.extend({}, this.options.edit, t.edit)), t.remove && (t.remove = L.extend({}, this.options.remove, t.remove)), this._toolbarClass = "leaflet-draw-edit", L.Toolbar.prototype.initialize.call(this, t), this._selectedFeatureCount = 0
+    }}), L.EditToolbar = L.Toolbar.extend({statics: {TYPE: "edit"}, options: {edit: {selectedPathOptions: {color: "#fe57a1", opacity: .6, dashArray: "10, 10", fill: !0, fillColor: "#fe57a1", fillOpacity: .1, maintainColor: !1}}, remove: {}, featureGroup: null}, initialize: function (t) {
+        t.edit && ("undefined" == typeof t.edit.selectedPathOptions && (t.edit.selectedPathOptions = this.options.edit.selectedPathOptions), t.edit.selectedPathOptions = L.extend({}, this.options.edit.selectedPathOptions, t.edit.selectedPathOptions)), t.remove && (t.remove = L.extend({}, this.options.remove, t.remove)), this._toolbarClass = "leaflet-draw-edit", L.Toolbar.prototype.initialize.call(this, t), this._selectedFeatureCount = 0
     }, getModeHandlers: function (t) {
         var e = this.options.featureGroup;
         return[
@@ -493,7 +498,7 @@
         t.style.marginTop = i + "px", t.style.marginLeft = o + "px"
     }, _enableLayerEdit: function (t) {
         var e, i = t.layer || t.target || t, o = i instanceof L.Marker;
-        (!o || i._icon) && (this._backupLayer(i), this._selectedPathOptions && (e = L.Util.extend({}, this._selectedPathOptions), o ? this._toggleMarkerHighlight(i) : (i.options.previousOptions = L.Util.extend({dashArray: null}, i.options), i instanceof L.Circle || i instanceof L.Polygon || i instanceof L.Rectangle || (e.fill = !1), i.setStyle(e))), o ? (i.dragging.enable(), i.on("dragend", this._onMarkerDragEnd)) : i.editing.enable())
+        (!o || i._icon) && (this._backupLayer(i), this._selectedPathOptions && (e = L.Util.extend({}, this._selectedPathOptions), e.maintainColor && (e.color = i.options.color, e.fillColor = i.options.fillColor), o ? this._toggleMarkerHighlight(i) : (i.options.previousOptions = L.Util.extend({dashArray: null}, i.options), i instanceof L.Circle || i instanceof L.Polygon || i instanceof L.Rectangle || (e.fill = !1), i.setStyle(e))), o ? (i.dragging.enable(), i.on("dragend", this._onMarkerDragEnd)) : i.editing.enable())
     }, _disableLayerEdit: function (t) {
         var e = t.layer || t.target || t;
         e.edited = !1, this._selectedPathOptions && (e instanceof L.Marker ? this._toggleMarkerHighlight(e) : (e.setStyle(e.options.previousOptions), delete e.options.previousOptions)), e instanceof L.Marker ? (e.dragging.disable(), e.off("dragend", this._onMarkerDragEnd, this)) : e.editing.disable()
