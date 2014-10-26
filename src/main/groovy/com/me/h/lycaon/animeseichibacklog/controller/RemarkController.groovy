@@ -1,25 +1,23 @@
-package com.me.h.lycaon.animeseichibacklog.controller;
+package com.me.h.lycaon.animeseichibacklog.controller
 
-import com.google.common.collect.Lists;
-import com.me.h.lycaon.animeseichibacklog.domain.Remark;
-import com.me.h.lycaon.animeseichibacklog.model.RemarkFormModel;
-import com.me.h.lycaon.animeseichibacklog.model.RemarkViewModel;
-import com.me.h.lycaon.animeseichibacklog.service.crud.RemarkCrudService;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.core.convert.ConversionService;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
+import com.google.common.collect.Lists
+import com.me.h.lycaon.animeseichibacklog.domain.Remark
+import com.me.h.lycaon.animeseichibacklog.model.RemarkFormModel
+import com.me.h.lycaon.animeseichibacklog.model.RemarkViewModel
+import com.me.h.lycaon.animeseichibacklog.service.crud.RemarkCrudService
+import lombok.extern.slf4j.Slf4j
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.Qualifier
+import org.springframework.core.convert.ConversionService
+import org.springframework.http.HttpStatus
+import org.springframework.http.ResponseEntity
+import org.springframework.stereotype.Controller
+import org.springframework.validation.BindingResult
+import org.springframework.web.bind.annotation.*
+import org.springframework.web.servlet.ModelAndView
 
-import javax.validation.Valid;
-import java.io.IOException;
-import java.util.List;
-import java.util.concurrent.Callable;
+import javax.validation.Valid
+import java.util.concurrent.Callable
 
 /**
  * Created by lycaon_h on 2014/03/05.
@@ -27,7 +25,7 @@ import java.util.concurrent.Callable;
 @Slf4j
 @Controller
 @RequestMapping("/r")
-@SessionAttributes(value = {"bbox", "baseUrls"})
+@SessionAttributes(value = ["bbox", "baseUrls"])
 public class RemarkController {
 
     @Autowired

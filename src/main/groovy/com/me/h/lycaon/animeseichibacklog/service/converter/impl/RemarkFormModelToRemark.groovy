@@ -32,9 +32,10 @@ class RemarkFormModelToRemark implements Converter<RemarkFormModel, Remark> {
     ) {
         Remark remark = new Remark(remarkFormModel)
 
-        BufferedImage bImage = ImageIO.read(remarkFormModel
-                                                    .getRemarkImageFile()
-                                                    .getInputStream());
+        BufferedImage bImage = ImageIO.read(
+                remarkFormModel
+                        .getRemarkImageFile()
+                        .getInputStream());
         remark.remarkImagePath = imageService.saveImageWithThumbnail(bImage);
 
         remark.createUserId = userInfoService.userId

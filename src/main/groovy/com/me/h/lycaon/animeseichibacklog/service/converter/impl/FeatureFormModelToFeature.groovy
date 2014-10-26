@@ -33,8 +33,8 @@ class FeatureFormModelToFeature implements Converter<FeatureFormModel, Feature> 
         Feature feature = new Feature(featureFormModel)
 
         BufferedImage bImage = ImageIO.read(featureFormModel
-                                                    .getFeatureImageFile()
-                                                    .getInputStream());
+                .getFeatureImageFile()
+                .getInputStream());
         feature.featureImagePath = imageService.saveImageWithThumbnail(bImage);
 
         feature.createUserId = userInfoService.userId

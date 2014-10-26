@@ -1,31 +1,31 @@
-package com.me.h.lycaon.animeseichibacklog.controller;
+package com.me.h.lycaon.animeseichibacklog.controller
 
-import com.me.h.lycaon.animeseichibacklog.controller.exception.RequestException;
-import com.me.h.lycaon.animeseichibacklog.domain.User;
-import com.me.h.lycaon.animeseichibacklog.model.UserFormModel;
-import com.me.h.lycaon.animeseichibacklog.service.crud.UserCrudService;
-import com.me.h.lycaon.animeseichibacklog.service.user.UserInfoService;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.core.convert.ConversionService;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.SessionAttributes;
+import com.me.h.lycaon.animeseichibacklog.controller.exception.RequestException
+import com.me.h.lycaon.animeseichibacklog.domain.User
+import com.me.h.lycaon.animeseichibacklog.model.UserFormModel
+import com.me.h.lycaon.animeseichibacklog.service.crud.UserCrudService
+import com.me.h.lycaon.animeseichibacklog.service.user.UserInfoService
+import lombok.extern.slf4j.Slf4j
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.Qualifier
+import org.springframework.core.convert.ConversionService
+import org.springframework.security.access.prepost.PreAuthorize
+import org.springframework.security.core.context.SecurityContextHolder
+import org.springframework.stereotype.Controller
+import org.springframework.ui.ModelMap
+import org.springframework.validation.BindingResult
+import org.springframework.web.bind.annotation.ModelAttribute
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestMethod
+import org.springframework.web.bind.annotation.SessionAttributes
 
-import javax.validation.Valid;
+import javax.validation.Valid
 
 /**
  * Created by lycaon_h on 2014/03/05.
  */
 @Slf4j
-@SessionAttributes(value = {"userRoles", "userAlias"})
+@SessionAttributes(value = ["userRoles", "userAlias"])
 @Controller
 @RequestMapping("/u")
 public class UserController {
@@ -41,12 +41,11 @@ public class UserController {
     @Qualifier("conversionService")
     private ConversionService conversionService;
 
-
     /**
      * Login process
      *
      * @param userFormModel Required fields: userEmail and userPassword
-     * @param model         Store user auth information to be bound to the key "userRole".
+     * @param model Store user auth information to be bound to the key "userRole".
      * @return Login success -> redirect to "/map", login failure -> redirect to "/"
      */
     @RequestMapping(value = "/l", method = RequestMethod.POST)
@@ -86,12 +85,11 @@ public class UserController {
         return "redirect:/";
     }
 
-
     /**
      * User creation process
      *
      * @param userFormModel Required fields: userAlias, userEmail and userPassword
-     * @param model         Store user auth information to be bound to the key "userRole".
+     * @param model Store user auth information to be bound to the key "userRole".
      * @return Login success -> redirect to "/map", login failure -> redirect to "/"
      */
     @RequestMapping(value = "/c", method = RequestMethod.POST)
@@ -115,7 +113,6 @@ public class UserController {
         }
     }
 
-
     /**
      * @param userFormModel
      * @param result
@@ -129,7 +126,6 @@ public class UserController {
             ModelMap model
     ) {
     }
-
 
     /**
      * @param model
